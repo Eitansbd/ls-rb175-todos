@@ -1,13 +1,19 @@
 
 <ul id="lists">
- <% @lists.each do |list| %>
-   <li>
-     <a>
-       <h2><%= list[:name] %></h2>
-       <p><%= list[:todos].size %></p>
-     </a>
-   </li>
- <% end %>
+  <% @lists.each_with_index do |list, index| %>
+  	<% if all_complete?(list) %>
+    	<li class="complete">
+    <% else %>
+    	<li>
+    <% end %>		
+      	<a href="/lists/<%=index%>">
+        	<h2><%= list[:name] %></h2>
+        	<p><%= list[:todos].size %></p>
+      	</a>
+    	</li>
+  <% end %>
 </ul>
 
-<a href="/lists/new">New List</a>
+<% content_for :header_links do %>
+	<a class ="add" href="/lists/new">New List</a>
+<% end %>
