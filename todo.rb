@@ -10,9 +10,42 @@ configure do
 end
 
 helpers do 
-  def all_complete?(list)
-    binding.pry
-    list[:todos].all? {|todo| todo[:completed]}
+  def todos_completed_count(list)
+    list[:todos].select {|todo| todo[:completed]}.size
+  end
+
+  def list_complete?(list)
+    number_completed = todos_completed_count(list)
+    
+    number_completed > 0 && number_completed == todos_count(list)
+  end
+
+  def list_class(list)
+    "complete" if list_complete?(list)
+  end
+
+  def todos_count(list)
+    list[:todos].size
+  end
+
+  def sort_lists_with_index(lists, &block)
+    sorted_lists = lists.sort_by do |list|
+      list_complete?(list).to_s
+    end
+
+    sorted_lists.each do |list|
+      yield(list, lists.index(list))
+    end
+  end
+
+  def sort_todos_with_index(todos, &block)
+    sorted_todos = todos.sort_by! do |todo|
+      todo[:completed].to_s
+    end
+
+    sorted_todos.each do |todo|
+      yield(todo, todos.index(todo))
+    end
   end
 end
 
@@ -27,7 +60,7 @@ end
 # View list of lists
 get '/lists' do
   @lists = session[:lists]
-  erb :lists, layout: :layout
+  erb :all_lists, layout: :layout
 end
 
 # Renders new list form
