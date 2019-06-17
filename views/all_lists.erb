@@ -1,8 +1,8 @@
 
 <ul id="lists">
-  <% sort_lists_with_index(@lists) do |list, index| %>
+  <% sort_lists_by_complete(@lists).each do |list| %>
   	<li class="<%= list_class(list) %>">	
-      <a href="/lists/<%=index%>">
+      <a href="/lists/<%=list[:id] %>">
        	<h2><%= list[:name] %></h2>
        	<p><%= todos_completed_count(list) %>/<%= todos_count(list) %></p>
       </a>
